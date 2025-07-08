@@ -18,6 +18,7 @@ COPY postcss.config.mjs ./
 COPY tsconfig.json ./
 COPY next.config.mjs ./
 COPY src/ ./src/
+COPY app/ ./app/
 RUN npm install
 RUN npm run build
 
