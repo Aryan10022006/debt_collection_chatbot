@@ -177,8 +177,7 @@ Thumbs.db
 
 # No Node.js files (this is pure Python)
 node_modules/
-package.json
-package-lock.json
-yarn.lock
-.npm/
-.yarn/
+
+# yarn.lock
+# .npm/
+# .yarn/
