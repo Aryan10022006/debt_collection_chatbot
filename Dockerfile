@@ -26,8 +26,10 @@ RUN npm run build
 # Stage 3: Final image
 FROM python:3.11-slim
 WORKDIR /app
-# Copy backend
+
+# Copy the entire backend from the backend stage
 COPY --from=backend /app /app
+
 # Copy frontend build
 COPY --from=frontend /frontend/.next /app/frontend/.next
 COPY --from=frontend /frontend/public /app/frontend/public
@@ -36,13 +38,15 @@ COPY --from=frontend /frontend/next.config.mjs /app/frontend/next.config.mjs
 COPY --from=frontend /frontend/tsconfig.json /app/frontend/tsconfig.json
 COPY --from=frontend /frontend/tailwind.config.ts /app/frontend/tailwind.config.ts
 COPY --from=frontend /frontend/postcss.config.mjs /app/frontend/postcss.config.mjs
+
 # Install Node.js for serving frontend
 RUN apt-get update && apt-get install -y nodejs npm
 WORKDIR /app/frontend
 RUN npm install --production
 WORKDIR /app
+
 # Install supervisor
 RUN apt-get update && apt-get install -y supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-EXPOSE 10000
+EXPOSE 8000
 CMD ["/usr/bin/supervisord"]
