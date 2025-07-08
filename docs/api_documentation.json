@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DebtBot AI API",
+    "version": "1.0.0",
+    "description": "AI-powered multilingual debt collection chatbot for India"
+  },
+  "servers": [
+    {
+      "url": "https://your-domain.com/api/v1",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:8000/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/chat/session": {
+      "post": {
+        "summary": "Create chat session",
+        "description": "Create a new chat session for a borrower",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": { "type": "string", "example": "917439330282" },
+                  "account_number": { "type": "string", "example": "AC123456789" },
+                  "platform": { "type": "string", "enum": ["web", "whatsapp"], "example": "web" },
+                  "language": { "type": "string", "example": "hi" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "session_token": { "type": "string" },
+                    "borrower": { "type": "object" },
+                    "debt_account": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/chat/message": {
+      "post": {
+        "summary": "Send chat message",
+        "description": "Send a message to the AI chatbot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "session_token": { "type": "string" },
+                  "message": { "type": "string", "example": "मुझे अपना बकाया राशि जानना है" },
+                  "language": { "type": "string", "example": "hi" }
+                },
+                "required": ["session_token", "message"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "AI response generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "response": { "type": "string" },
+                    "language": { "type": "string" },
+                    "intent": { "type": "string" },
+                    "suggested_actions": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/whatsapp/webhook": {
+      "get": {
+        "summary": "Verify WhatsApp webhook",
+        "description": "Webhook verification endpoint for WhatsApp",
+        "parameters": [
+          { "name": "hub.mode", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "hub.verify_token", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "hub.challenge", "in": "query", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Webhook verified" },
+          "403": { "description": "Verification failed" }
+        }
+      },
+      "post": {
+        "summary": "Handle WhatsApp webhook",
+        "description": "Process incoming WhatsApp messages and status updates",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "WhatsApp webhook payload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Webhook processed successfully" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChatMessage": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "sender_type": { "type": "string", "enum": ["user", "bot", "agent"] },
+          "content": { "type": "string" },
+          "language": { "type": "string" },
+          "sent_at": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object" }
+        }
+      },
+      "Borrower": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "account_number": { "type": "string" },
+          "name": { "type": "string" },
+          "phone": { "type": "string" },
+          "preferred_language": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

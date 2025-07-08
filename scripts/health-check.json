@@ -1,0 +1,38 @@
+{
+  "name": "DebtBot AI Health Check",
+  "version": "1.0.0",
+  "checks": [
+    {
+      "name": "Application Health",
+      "url": "http://localhost:8000/health",
+      "expected_status": 200,
+      "timeout": 5
+    },
+    {
+      "name": "API Documentation",
+      "url": "http://localhost:8000/docs",
+      "expected_status": 200,
+      "timeout": 5
+    },
+    {
+      "name": "WhatsApp Webhook Verification",
+      "url": "http://localhost:8000/api/v1/whatsapp/webhook?hub.mode=subscribe&hub.verify_token=debt_collection_webhook_verify_2024&hub.challenge=test",
+      "expected_response": "test",
+      "timeout": 5
+    },
+    {
+      "name": "Database Connection",
+      "command": "docker-compose exec -T db pg_isready -U postgres",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "Redis Connection",
+      "command": "docker-compose exec -T redis redis-cli ping",
+      "expected_output": "PONG"
+    }
+  ],
+  "alerts": {
+    "email": "admin@your-domain.com",
+    "webhook": "https://your-monitoring-service.com/webhook"
+  }
+}

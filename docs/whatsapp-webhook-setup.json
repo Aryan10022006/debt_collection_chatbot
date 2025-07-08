@@ -1,0 +1,20 @@
+{
+  "webhook_configuration": {
+    "url": "https://your-api-domain.com/api/whatsapp/webhook",
+    "verify_token": "debt_collection_webhook_verify_2024",
+    "subscribed_fields": ["messages", "message_deliveries", "message_reads", "message_reactions"]
+  },
+  "required_permissions": ["whatsapp_business_messaging", "whatsapp_business_management"],
+  "webhook_events": {
+    "messages": "Incoming messages from users",
+    "message_deliveries": "Message delivery confirmations",
+    "message_reads": "Message read receipts",
+    "message_reactions": "Message reactions (likes, etc.)"
+  },
+  "testing_endpoints": {
+    "verify_setup": "GET /api/whatsapp/verify-setup",
+    "test_message": "POST /api/whatsapp/test-message",
+    "send_template": "POST /api/whatsapp/send-template",
+    "get_templates": "GET /api/whatsapp/templates"
+  }
+}
