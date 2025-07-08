@@ -19,6 +19,7 @@ COPY tsconfig.json ./
 COPY next.config.mjs ./
 COPY src/ ./src/
 COPY app/ ./app/
+COPY lib/ ./lib/
 RUN npm install
 RUN npm run build
 
